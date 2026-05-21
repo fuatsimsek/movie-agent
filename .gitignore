@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Project — claude / dahili dokümanlar
+CLAUDE.md
+.claude/
+web/templates/CLAUDE_CODE_PROMPT.md
+
+# Büyük model dosyaları (GitHub 100MB limit)
+*.gguf
+*.safetensors
+*.bin
+
+# Eğitim checkpoint'leri ve harici kütüphaneler
+checkpoint/
+llama.cpp/
+
+# Eski arşivler
+movie-agent.zip
+*.zip
+
+# Logs
+*.log

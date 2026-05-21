@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movie Agent — Sistem Mimarisi</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #07070F;
+      color: #E8E8F8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 32px 20px;
+      line-height: 1.6;
+    }
+
+    .page { max-width: 1100px; margin: 0 auto; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 48px; }
+    .header h1 { font-size: 30px; font-weight: 800; color: #DEAB52; letter-spacing: -0.5px; }
+    .header p  { color: #6b6b80; font-size: 14px; margin-top: 6px; }
+
+    /* Pipeline */
+    .pipeline { display: flex; flex-direction: column; gap: 0; margin-bottom: 56px; }
+
+    .layer {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
+      position: relative;
+    }
+
+    .layer-left {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 2px solid #1a1a30;
+    }
+
+    .layer-num  { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: #4a4a60; font-family: monospace; margin-bottom: 4px; }
+    .layer-name { font-size: 15px; font-weight: 700; }
+    .layer-model { font-size: 11px; color: #6b6b80; margin-top: 3px; font-family: monospace; }
+
+    .layer-right {
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .layer-desc { font-size: 13px; color: #9a9ab0; flex: 1; min-width: 200px; }
+
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 11px;
+      font-family: monospace;
+      padding: 3px 9px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #9a9ab0;
+    }
+
+    /* Layer colors */
+    .l1 .layer-name { color: #4fc3f7; }
+    .l1 .layer-left { border-color: #4fc3f720; background: #0c182520; }
+    .l2 .layer-name { color: #81c784; }
+    .l2 .layer-left { border-color: #81c78420; background: #0c252720; }
+    .l3 .layer-name { color: #ffb74d; }
+    .l3 .layer-left { border-color: #ffb74d20; background: #1a0f0c20; }
+    .l4 .layer-name { color: #ce93d8; }
+    .l4 .layer-left { border-color: #ce93d820; background: #0c0c1a20; }
+    .l5 .layer-name { color: #a5d6a7; }
+    .l5 .layer-left { border-color: #a5d6a720; background: #0c1a0c20; }
+
+    /* Arrow */
+    .arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 28px;
+      color: #C8871A;
+      font-size: 18px;
+      opacity: 0.5;
+      margin-left: 100px;
+    }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 4px; border-bottom: 1px solid #1a1a30; margin-bottom: 28px; }
+    .tab {
+      padding: 10px 18px;
+      font-size: 13px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #6b6b80;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: -1px;
+    }
+    .tab:hover { color: #a0a0c0; }
+    .tab.active { color: #DEAB52; border-bottom-color: #C8871A; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Info cards */
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 640px) { .cards { grid-template-columns: 1fr; } }
+
+    .card {
+      padding: 18px 20px;
+      background: #0C0C1B;
+      border: 1px solid #1a1a30;
+      border-radius: 8px;
+    }
+    .card h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #DEAB52; margin-bottom: 12px; text-transform: uppercase; }
+    .card ul { list-style: none; }
+    .card li { font-size: 12px; color: #8a8aa0; padding: 4px 0; border-bottom: 1px solid #12121f; }
+    .card li:last-child { border: none; }
+    .card li strong { color: #c0c0d8; font-weight: 600; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0; }
+    th { padding: 9px 12px; text-align: left; background: #0c0c1b; color: #DEAB52; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid #1a1a30; }
+    td { padding: 9px 12px; color: #8a8aa0; border-bottom: 1px solid #12121f; }
+    td strong { color: #c0c0d8; }
+
+    /* Code block */
+    .code {
+      background: #0a0a18;
+      border: 1px solid #1a1a30;
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #7ec8e3;
+      overflow-x: auto;
+      line-height: 1.7;
+      margin: 12px 0;
+    }
+
+    /* Steps */
+    .steps { display: flex; flex-direction: column; gap: 1px; }
+    .step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #12121f;
+      align-items: flex-start;
+    }
+    .step:last-child { border: none; }
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #1a1a2e;
+      border: 1px solid #2a2a40;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #DEAB52;
+      flex-shrink: 0;
+    }
+    .step-body { padding-top: 4px; }
+    .step-title { font-size: 13px; font-weight: 600; color: #c0c0d8; margin-bottom: 3px; }
+    .step-detail { font-size: 12px; color: #6b6b80; }
+
+    /* Section header */
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #4a4a60;
+      margin: 24px 0 12px;
+    }
+
+    /* Footer */
+    footer { text-align: center; color: #3a3a50; font-size: 11px; margin-top: 48px; padding-top: 20px; border-top: 1px solid #12121f; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <h1>🎬 Movie Agent</h1>
+    <p>Duygu Analizinden Film Önerisine — 5 Katmanlı AI Pipeline</p>
+  </div>
+
+  <!-- PIPELINE DİYAGRAMI -->
+  <div class="pipeline">
+
+    <div class="layer l1">
+      <div class="layer-left">
+        <div class="layer-num">KATMAN 01</div>
+        <div class="layer-name">Duygu Analizi</div>
+        <div class="layer-model">llama3.1:8b</div>
+      </div>
+      <div class="layer-right">
+        <div class="layer-desc">Kullanıcının Türkçe metninden enerji seviyesi, ruh hali değeri, ihtiyaçlar çıkarılır.</div>
+        <div class="tags">
+          <span class="tag">energy_level</span>
+          <span class="tag">mood_valence</span>
+          <span class="tag">needs</span>
+          <span class="tag">avoid</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="layer l2">
+      <div class="layer-left">
+        <div class="layer-num">KATMAN 02</div>
+        <div class="layer-name">Film Önerisi</div>
+        <div class="layer-model">llama3.1:8b</div>
+      </div>
+      <div class="layer-right">
+        <div class="layer-desc">Duygu profiline göre gerçek bir film önerilir, konu özeti ve gerekçe üretilir.</div>
+        <div class="tags">
+          <span class="tag">title</span>
+          <span class="tag">year</span>
+          <span class="tag">plot</span>
+          <span class="tag">reason</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="layer l3">
+      <div class="layer-left">
+        <div class="layer-num">KATMAN 03</div>
+        <div class="layer-name">Tür Sınıflandırma</div>
+        <div class="layer-model">movie-agent (fine-tuned)</div>
+      </div>
+      <div class="layer-right">
+        <div class="layer-desc">Fine-tuned model filmin özetini okuyarak 1–3 tür etiketi çıkarır. JSON formatında döner.</div>
+        <div class="tags">
+          <span class="tag">drama</span>
+          <span class="tag">psychological</span>
+          <span class="tag">thriller</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="layer l4">
+      <div class="layer-left">
+        <div class="layer-num">KATMAN 04</div>
+        <div class="layer-name">Ruh Hali Eşleştirme</div>
+        <div class="layer-model">mood_map.json</div>
+      </div>
+      <div class="layer-right">
+        <div class="layer-desc">Tür etiketleri deterministik olarak 5 ruh hali kategorisinden birine eşlenir.</div>
+        <div class="tags">
+          <span class="tag">fun</span>
+          <span class="tag">adrenaline</span>
+          <span class="tag">emotional</span>
+          <span class="tag">comfort</span>
+          <span class="tag">thought-provoking</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="layer l5">
+      <div class="layer-left">
+        <div class="layer-num">KATMAN 05</div>
+        <div class="layer-name">Film Seçimi</div>
+        <div class="layer-model">Küratörlü Kütüphane</div>
+      </div>
+      <div class="layer-right">
+        <div class="layer-desc">Tespit edilen ruh haline göre küratörlü film kütüphanesinden en uygun film seçilip kullanıcıya sunulur.</div>
+        <div class="tags">
+          <span class="tag">poster</span>
+          <span class="tag">platform</span>
+          <span class="tag">gerekçe</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEKMELER -->
+  <div class="tabs">
+    <button class="tab active" onclick="show('models', this)">Modeller</button>
+    <button class="tab" onclick="show('finetuning', this)">Fine-Tuning</button>
+    <button class="tab" onclick="show('tech', this)">Teknoloji</button>
+    <button class="tab" onclick="show('design', this)">Tasarım</button>
+  </div>
+
+  <!-- MODELLER -->
+  <div id="models" class="tab-panel active">
+    <div class="cards">
+      <div class="card">
+        <h4>Kullanılan Modeller</h4>
+        <ul>
+          <li><strong>llama3.1:8b</strong> — Duygu analizi ve film önerisi</li>
+          <li><strong>movie-agent</strong> — Tür sınıflandırma (fine-tuned)</li>
+          <li><strong>mood_map.json</strong> — Tür → ruh hali (deterministik)</li>
+          <li><strong>Ollama</strong> — Lokal LLM runtime</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>llama3.1:8b Özellikleri</h4>
+        <ul>
+          <li><strong>Parametre sayısı:</strong> 8 milyar</li>
+          <li><strong>Model türü:</strong> Instruction-tuned</li>
+          <li><strong>Context window:</strong> 128K token</li>
+          <li><strong>Dil desteği:</strong> Türkçe dahil 8+ dil</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h4>5 Ruh Hali Kategorisi</h4>
+        <ul>
+          <li><strong>fun</strong> — Eğlenceli, hafif, güldüren</li>
+          <li><strong>adrenaline</strong> — Aksiyon, gerilim, heyecan</li>
+          <li><strong>emotional</strong> — Duygusal, dramatik, yoğun</li>
+          <li><strong>comfort</strong> — Rahatlatıcı, sıcak, tanıdık</li>
+          <li><strong>thought-provoking</strong> — Felsefi, derin, düşündürücü</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>API Endpoint</h4>
+        <ul>
+          <li><strong>POST</strong> /api/find</li>
+          <li><strong>Input:</strong> Türkçe metin (min 10 karakter)</li>
+          <li><strong>Output:</strong> emotion + recommendation + genres + moods</li>
+          <li><strong>Süre:</strong> 8–12 saniye (3 LLM çağrısı)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINE-TUNING -->
+  <div id="finetuning" class="tab-panel">
+
+    <div class="section-title">Eğitim Süreci — Kronolojik</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Veri Seti: MPST (Movie Plot Synopses with Tags)</div>
+          <div class="step-detail">8.043 film özeti · 71 tür etiketi · Kaggle üzerinden temin edildi · %80 eğitim / %10 validasyon / %10 test</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Eğitim Ortamı: Google Colab T4 GPU</div>
+          <div class="step-detail">16 GB VRAM · 25 GB RAM · PyTorch 2.x + HuggingFace Transformers + TRL 0.22</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Base Model: Meta-Llama-3.1-8B-Instruct</div>
+          <div class="step-detail">8 milyar parametre · Instruction-tuned · 15 trilyon token eğitim verisi</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Eğitim: SFTTrainer (Supervised Fine-Tuning)</div>
+          <div class="step-detail">3 epoch · 1.000 step · batch size 8 · learning rate 5e-4 · warmup steps 100 · loss: response_only</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Değerlendirme</div>
+          <div class="step-detail">Validation seti: 804 örnek · Her 100 step'te değerlendirme · Tür sınıflandırma doğruluğu: ~%85</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <div class="step-title">Dağıtım: Ollama Modelfile</div>
+          <div class="step-detail">HuggingFace → GGUF dönüşümü (~4 GB) · Ollama ile lokal deploy · temperature 0.1 · max 40 token</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:28px;">Modelfile</div>
+    <div class="code">FROM llama3.1:8b<br><br>SYSTEM """<br>&nbsp;&nbsp;Sen bir film etiketleyicisin. Film özetine göre 1-3 tür etiketi dön.<br>&nbsp;&nbsp;SADECE JSON formatında: {"genres": ["tür1", "tür2"]}<br>"""<br><br>PARAMETER temperature 0.1<br>PARAMETER top_p 0.9<br>PARAMETER top_k 40<br>PARAMETER num_predict 40</div>
+
+    <div class="section-title" style="margin-top:28px;">Eğitim Özeti</div>
+    <table>
+      <tr><th>Parametre</th><th>Değer</th></tr>
+      <tr><td><strong>Epoch</strong></td><td>3</td></tr>
+      <tr><td><strong>Toplam step</strong></td><td>1.000</td></tr>
+      <tr><td><strong>Batch size</strong></td><td>8</td></tr>
+      <tr><td><strong>Learning rate</strong></td><td>5e-4</td></tr>
+      <tr><td><strong>Loss türü</strong></td><td>response_only</td></tr>
+      <tr><td><strong>Eğitim süresi</strong></td><td>~4-5 saat (Colab T4)</td></tr>
+      <tr><td><strong>Veri seti boyutu</strong></td><td>8.043 film · 71 etiket</td></tr>
+      <tr><td><strong>Model boyutu</strong></td><td>~4 GB (GGUF)</td></tr>
+      <tr><td><strong>Doğruluk</strong></td><td>~%85 (validation)</td></tr>
+    </table>
+  </div>
+
+  <!-- TEKNOLOJİ -->
+  <div id="tech" class="tab-panel">
+    <div class="cards">
+      <div class="card">
+        <h4>Backend</h4>
+        <ul>
+          <li><strong>Flask 2.x</strong> — Python web framework</li>
+          <li><strong>Ollama</strong> — Lokal LLM runtime</li>
+          <li><strong>Requests</strong> — HTTP istemcisi</li>
+          <li><strong>WSL2 Ubuntu</strong> — Çalışma ortamı</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Frontend</h4>
+        <ul>
+          <li><strong>React 18</strong> — UI bileşenleri</li>
+          <li><strong>Babel 7.29</strong> — Tarayıcıda JSX derleme</li>
+          <li><strong>TMDB CDN</strong> — Film poster görselleri</li>
+          <li><strong>Tokens.css</strong> — Tasarım sistemi</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Poster Yükleme Sırası</h4>
+        <ul>
+          <li><strong>1.</strong> TMDB CDN (gerçek poster)</li>
+          <li><strong>2.</strong> Lokal SVG (yedek)</li>
+          <li><strong>3.</strong> Metin kartı (film adı + yıl)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Offline Çalışma</h4>
+        <ul>
+          <li>Ollama tamamen lokal çalışır</li>
+          <li>İnternet bağlantısı gerekmez</li>
+          <li>Poster için TMDB opsiyonel</li>
+          <li>SVG yedekler her zaman hazır</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASARIM -->
+  <div id="design" class="tab-panel">
+    <div class="cards">
+      <div class="card">
+        <h4>Claude Designer</h4>
+        <ul>
+          <li>Premium UI bileşen kütüphanesi</li>
+          <li>"Criterion Dark" sinematik tema</li>
+          <li>Tasarım token sistemi (CSS değişkenleri)</li>
+          <li>Responsive ve erişilebilir bileşenler</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Renk Paleti</h4>
+        <ul>
+          <li><strong>#07070F</strong> — Ana arka plan</li>
+          <li><strong>#0C0C1B</strong> — Panel yüzeyi</li>
+          <li><strong>#C8871A</strong> — Altın vurgu rengi</li>
+          <li><strong>#9a9aaa</strong> — İkincil metin</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Yazı Tipleri</h4>
+        <ul>
+          <li><strong>Syne</strong> — Başlıklar (display)</li>
+          <li><strong>Space Grotesk</strong> — Gövde metni</li>
+          <li><strong>JetBrains Mono</strong> — Teknik metin</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Animasyonlar</h4>
+        <ul>
+          <li>Sinematik yükleme animasyonu</li>
+          <li>Smooth fade-in geçişler (300ms)</li>
+          <li>Hover scale ve gölge efektleri</li>
+          <li>Dikey kayan poster kolonları</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer>Movie Agent · Flask + React + Ollama · Claude Designer UI · WSL2</footer>
+</div>
+
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>

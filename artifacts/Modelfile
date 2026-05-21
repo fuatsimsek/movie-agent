@@ -1,0 +1,5 @@
+FROM llama3.1:8b
+ADAPTER ./movie-agent-lora.gguf
+PARAMETER temperature 0.2
+PARAMETER num_predict 80
+SYSTEM "Sen bir film etiketleyicisin. Verilen ozete gore 1-3 etiket dondur. SADECE JSON formatinda yanit ver."

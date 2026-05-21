@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ═══════════════════════════════════════════════
+   Movie Agent — Design Tokens v1.0
+   Aesthetic: "Criterion Dark" — premium offline AI
+   ═══════════════════════════════════════════════ */
+:root {
+  /* ── Base ─────────────────────────────────── */
+  --bg-base:     #07070F;
+  --bg-surface:  #0C0C1B;
+  --bg-elevated: #111127;
+  --bg-overlay:  #181834;
+  --bg-hover:    rgba(255,255,255,0.04);
+  --bg-active:   rgba(255,255,255,0.07);
+
+  /* ── Borders ──────────────────────────────── */
+  --bdr-subtle:  rgba(255,255,255,0.05);
+  --bdr-default: rgba(255,255,255,0.09);
+  --bdr-strong:  rgba(255,255,255,0.16);
+  --bdr-focus:   rgba(200,135,26,0.65);
+
+  /* ── Accent — Cinematic Amber ─────────────── */
+  --accent:      #C8871A;
+  --accent-lt:   #E4A840;
+  --accent-dim:  #9A6510;
+  --accent-mute: rgba(200,135,26,0.10);
+  --accent-glow: rgba(200,135,26,0.22);
+  --accent-text: #DEAB52;
+
+  /* ── Text ─────────────────────────────────── */
+  --text-1: #EDE9E0;
+  --text-2: #9290A0;
+  --text-3: #6A6878;
+
+  /* ── Semantic ─────────────────────────────── */
+  --success:     #3CB87A;
+  --success-bg:  rgba(60,184,122,0.10);
+  --success-bdr: rgba(60,184,122,0.26);
+
+  --error:       #E05252;
+  --error-bg:    rgba(224,82,82,0.10);
+  --error-bdr:   rgba(224,82,82,0.26);
+
+  --warn:        #E89A30;
+  --warn-bg:     rgba(232,154,48,0.10);
+  --warn-bdr:    rgba(232,154,48,0.26);
+
+  --info:        #5080DC;
+  --info-bg:     rgba(80,128,220,0.10);
+  --info-bdr:    rgba(80,128,220,0.26);
+
+  /* ── Mood Palette ─────────────────────────── */
+  --mood-fun:  #FDB940;
+  --mood-adr:  #E05252;
+  --mood-emo:  #5080DC;
+  --mood-cmf:  #3CB87A;
+  --mood-tpv:  #9060E0;
+
+  /* ── Typography ───────────────────────────── */
+  --ff-display: 'Syne', sans-serif;
+  --ff-body:    'Space Grotesk', sans-serif;
+  --ff-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── Type Scale ───────────────────────────── */
+  --fs-11: 0.6875rem;  /* 11px — labels, meta */
+  --fs-12: 0.75rem;    /* 12px — captions */
+  --fs-13: 0.8125rem;  /* 13px — secondary UI */
+  --fs-14: 0.875rem;   /* 14px — body small */
+  --fs-15: 0.9375rem;  /* 15px — body */
+  --fs-16: 1rem;       /* 16px — body large */
+  --fs-18: 1.125rem;   /* 18px — subheading */
+  --fs-20: 1.25rem;    /* 20px */
+  --fs-24: 1.5rem;     /* 24px — heading */
+  --fs-32: 2rem;       /* 32px — display */
+  --fs-48: 3rem;       /* 48px — hero */
+
+  /* ── Spacing (4px grid) ───────────────────── */
+  --sp-1:4px;  --sp-2:8px;  --sp-3:12px; --sp-4:16px;
+  --sp-5:20px; --sp-6:24px; --sp-8:32px; --sp-10:40px;
+  --sp-12:48px; --sp-16:64px; --sp-20:80px;
+
+  /* ── Radius ───────────────────────────────── */
+  --r-xs:  3px;
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  16px;
+  --r-xl:  24px;
+  --r-2xl: 32px;
+  --r-full:9999px;
+
+  /* ── Shadow ───────────────────────────────── */
+  --sh-sm:  0 2px 8px rgba(0,0,0,0.45);
+  --sh-md:  0 6px 24px rgba(0,0,0,0.55);
+  --sh-lg:  0 16px 56px rgba(0,0,0,0.72);
+  --sh-acc: 0 4px 24px rgba(200,135,26,0.22);
+  --sh-glw: 0 0 48px rgba(200,135,26,0.12);
+
+  /* ── Motion ───────────────────────────────── */
+  --d-fast:   120ms;
+  --d-base:   200ms;
+  --d-slow:   350ms;
+  --d-slower: 560ms;
+  --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-inout:  cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Layout ───────────────────────────────── */
+  --sidebar-w: 440px;
+  --nav-h: 54px;
+}
+
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: var(--ff-body);
+  background: var(--bg-base);
+  color: var(--text-1);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+textarea, input, button { font-family: var(--ff-body); }
+textarea::placeholder, input::placeholder { color: var(--text-3); opacity: 1; }
+
+/* ── JSON Syntax Colors ─────────────────────── */
+.json-key  { color: #DEAB52; }
+.json-str  { color: #6BCB9A; }
+.json-num  { color: #79B8FF; }
+.json-bool { color: #E4A840; }
+.json-null { color: var(--text-3); }
+.json-punc { color: var(--text-2); }
+
+/* ── Keyframes ──────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: scale(0.55); opacity: 0.4; }
+  40%            { transform: scale(1.00); opacity: 1.0; }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(60,184,122,0.45); }
+  70%  { box-shadow: 0 0 0 5px rgba(60,184,122,0); }
+  100% { box-shadow: 0 0 0 0 rgba(60,184,122,0); }
+}
+/* ── Yeni animasyon keyframe'leri ────────────────── */
+@keyframes word-rise {
+  from { transform: translateY(115%) skewY(4deg); }
+  to   { transform: translateY(0) skewY(0); }
+}
+@keyframes shockwave {
+  0%   { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+@keyframes scan-line-move {
+  0%   { transform: translateY(-20px); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+@keyframes corner-pulse {
+  0%,100% { opacity: 0.5; }
+  50%     { opacity: 1; filter: drop-shadow(0 0 4px var(--accent)); }
+}
+@keyframes typewrite-line {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+@keyframes col-scroll-down {
+  from { transform: translateY(-50%); }
+  to   { transform: translateY(0%); }
+}
+}
+@keyframes fade-blur-up {
+  from { opacity: 0; transform: translateY(10px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0);  filter: blur(0); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes screen-in {
+  from { opacity: 0; transform: scale(0.992); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes progress-fill { from { width: 0%; } }
+
+/* ── Background atmosphere ───────────────────── */
+@keyframes blob-drift-1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(40px,-30px) scale(1.12); }
+  66%     { transform: translate(-25px,20px) scale(0.92); }
+}
+@keyframes blob-drift-2 {
+  0%,100% { transform: translate(0,0) scale(1.05); }
+  33%     { transform: translate(-35px,25px) scale(0.88); }
+  66%     { transform: translate(30px,-20px) scale(1.08); }
+}
+@keyframes blob-drift-3 {
+  0%,100% { transform: translate(0,0) scale(0.95); }
+  50%     { transform: translate(20px,35px) scale(1.1); }
+}
+@keyframes filmstrip-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes scan-sweep {
+  0%   { top: -4px; opacity: 0.6; }
+  50%  { opacity: 0.9; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes ring-spin {
+  from { transform: rotate(-90deg); }
+  to   { transform: rotate(270deg); }
+}
+@keyframes glow-pulse {
+  0%,100% { opacity: 0.5; box-shadow: 0 0 16px var(--accent-glow); }
+  50%     { opacity: 1;   box-shadow: 0 0 32px var(--accent-glow); }
+}
+
+/* ── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bdr-strong); border-radius: var(--r-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* ── Focus ──────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* ── Selection ──────────────────────────────── */
+::selection { background: var(--accent-mute); color: var(--text-1); }

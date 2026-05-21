@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="grad_12" x1="0" y1="0" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#100505;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff9500;stop-opacity:0.2" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="220" height="330" fill="#100505"/>
+  <rect width="220" height="330" fill="url(#grad_12)" opacity="0.6"/>
+  
+  <!-- Decorative shapes -->
+  <circle cx="50" cy="50" r="40" fill="#ff9500" opacity="0.15"/>
+  <circle cx="170" cy="280" r="50" fill="#ff9500" opacity="0.1"/>
+  <rect x="20" y="200" width="180" height="2" fill="#ff9500" opacity="0.3"/>
+  
+  <!-- Title -->
+  <text x="110" y="160" font-family="Arial, sans-serif" font-size="18" font-weight="bold" 
+        text-anchor="middle" fill="#ff9500" opacity="0.95">
+    <tspan x="110" dy="0">Fight Club</tspan>
+    
+  </text>
+  
+  <!-- Year -->
+  <text x="110" y="295" font-family="monospace" font-size="12" text-anchor="middle" 
+        fill="#ff9500" opacity="0.6">1999</text>
+  
+  <!-- Accent line -->
+  <line x1="40" y1="120" x2="180" y2="120" stroke="#ff9500" stroke-width="1.5" opacity="0.4"/>
+</svg>

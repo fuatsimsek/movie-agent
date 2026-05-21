@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Mood Agent</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #1a1a2e 0%, #0a0a0f 50%);
+    color: #e8e8ea;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    line-height: 1.5;
+  }
+  .container { max-width: 800px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 2.5rem; }
+  h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle { color: #a0a0b0; font-size: 1.05rem; }
+
+  .card {
+    background: rgba(30, 30, 45, 0.6);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 16px;
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+  .card-label { font-weight: 600; font-size: 1.1rem; margin-bottom: 0.4rem; }
+  .card-hint { color: #888; font-size: 0.9rem; margin-bottom: 1rem; }
+
+  textarea {
+    width: 100%;
+    min-height: 130px;
+    background: rgba(20, 20, 30, 0.7);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    color: #e8e8ea;
+    padding: 1rem;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  textarea:focus { outline: none; border-color: #6366f1; }
+
+  button {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border: 0;
+    padding: 1.1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+  button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .spinner {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: #a0a0b0;
+    font-size: 1rem;
+  }
+  .spinner.active { display: block; }
+  .pulse {
+    display: inline-block;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .error {
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    color: #f87171;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    display: none;
+  }
+  .error.active { display: block; }
+
+  .result { display: none; margin-top: 2rem; }
+  .result.active { display: block; }
+
+  .recommendation {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(139, 92, 246, 0.18));
+    border: 1px solid rgba(99, 102, 241, 0.35);
+  }
+  .rec-type {
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    color: #a0a0b0;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+  }
+  .rec-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.3rem;
+  }
+  .rec-year { color: #a0a0b0; font-size: 1rem; margin-bottom: 1rem; }
+  .rec-reason {
+    font-style: italic;
+    color: #d0d0dc;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .layers-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #6366f1;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .layer {
+    background: rgba(20, 20, 30, 0.5);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+  .layer-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.7rem; }
+  .layer-num {
+    background: #6366f1;
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .layer-title { font-weight: 600; font-size: 0.98rem; }
+  .layer-model { color: #888; font-size: 0.78rem; margin-left: auto; font-family: monospace; }
+
+  .meta-row { margin: 0.5rem 0; font-size: 0.92rem; }
+  .meta-row strong { color: #c0c0cc; font-weight: 600; }
+
+  .badge {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.2);
+    color: #c4c8ff;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    margin: 0.15rem 0.1rem;
+  }
+  .badge.warn { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+  .badge.ok { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+
+  footer {
+    text-align: center;
+    color: #555;
+    font-size: 0.85rem;
+    margin-top: 3rem;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Movie Mood Agent</h1>
+      <p class="subtitle">Bugun nasil hissettigini anlat — yapay zeka sana uygun bir film bulsun.</p>
+    </header>
+
+    <div class="card">
+      <div class="card-label">Bugun nasil hissediyorsun?</div>
+      <div class="card-hint">Ne kadar detay verirsen sonuc o kadar isabetli olur.</div>
+      <textarea id="user-text" placeholder="Ornek: Cok yorucu bir gundu, hem mutsuzum hem yorgunum, biraz dagilmak istiyorum ama kafami yormayan bir sey olsun..."></textarea>
+    </div>
+
+    <button id="submit">Bana Bir Film Bul</button>
+
+    <div class="error" id="error"></div>
+    <div class="spinner" id="spinner"><span class="pulse">Yapay zeka dusunuyor (5 katmanli analiz)...</span></div>
+
+    <div class="result" id="result">
+      <div class="recommendation">
+        <div class="rec-type" id="rec-type"></div>
+        <h2 class="rec-title" id="rec-title"></h2>
+        <div class="rec-year" id="rec-year"></div>
+        <div class="rec-reason" id="rec-reason"></div>
+      </div>
+
+      <div class="layers-title">YAPAY ZEKA'NIN DUSUNCE SURECI</div>
+
+      <div class="layer">
+        <div class="layer-head">
+          <span class="layer-num">1</span>
+          <span class="layer-title">Duygu analizi</span>
+          <span class="layer-model">llama3.1:8b</span>
+        </div>
+        <div class="meta-row"><strong>Ozet:</strong> <span id="emo-summary">—</span></div>
+        <div class="meta-row"><strong>Enerji:</strong> <span id="emo-energy" class="badge"></span> · <strong>Ruh hali:</strong> <span id="emo-valence" class="badge"></span></div>
+        <div class="meta-row"><strong>Ihtiyac:</strong> <span id="emo-needs"></span></div>
+        <div class="meta-row"><strong>Kacinma:</strong> <span id="emo-avoid"></span></div>
+      </div>
+
+      <div class="layer">
+        <div class="layer-head">
+          <span class="layer-num">2</span>
+          <span class="layer-title">Film onerisi</span>
+          <span class="layer-model">llama3.1:8b</span>
+        </div>
+        <div class="meta-row"><strong>Onerilen:</strong> <span id="rec-summary">—</span></div>
+        <div class="meta-row" style="color:#888; font-size:0.85rem; line-height:1.6"><strong>Konu:</strong> <span id="rec-plot"></span></div>
+      </div>
+
+      <div class="layer">
+        <div class="layer-head">
+          <span class="layer-num">3</span>
+          <span class="layer-title">Tur tahmini</span>
+          <span class="layer-model">movie-agent (fine-tuned)</span>
+        </div>
+        <div class="meta-row"><strong>Tespit edilen MPST etiketleri:</strong></div>
+        <div id="genres" style="margin-top: 0.4rem"></div>
+      </div>
+
+      <div class="layer">
+        <div class="layer-head">
+          <span class="layer-num">4</span>
+          <span class="layer-title">Mood eslesmesi</span>
+          <span class="layer-model">mood_map.json</span>
+        </div>
+        <div class="meta-row"><strong>Filmin sundugu mood'lar:</strong></div>
+        <div id="detected-moods" style="margin-top: 0.4rem"></div>
+      </div>
+
+      <div class="layer">
+        <div class="layer-head">
+          <span class="layer-num">5</span>
+          <span class="layer-title">Sentez</span>
+          <span class="layer-model">deterministik</span>
+        </div>
+        <div class="meta-row" id="synthesis">—</div>
+      </div>
+    </div>
+
+    <footer>5-katmanli pipeline · Llama 3.1 8B + MPST fine-tune · Ollama · Flask</footer>
+  </div>
+
+<script>
+function showError(msg) {
+  const e = document.getElementById('error');
+  e.textContent = msg;
+  e.classList.add('active');
+}
+function clearError() { document.getElementById('error').classList.remove('active'); }
+function renderBadges(elId, items, cls = '') {
+  const el = document.getElementById(elId);
+  if (!items || items.length === 0) {
+    el.innerHTML = '<span class="badge">—</span>';
+    return;
+  }
+  el.innerHTML = items.map(x => `<span class="badge ${cls}">${x}</span>`).join('');
+}
+function setText(id, txt) { document.getElementById(id).textContent = txt || '—'; }
+
+document.getElementById('submit').addEventListener('click', async () => {
+  clearError();
+  const text = document.getElementById('user-text').value.trim();
+  if (!text) { showError('Once nasil hissettigini yaz.'); return; }
+  if (text.length < 10) { showError('Biraz daha detay yaz, AI daha iyi anlasin.'); return; }
+
+  const btn = document.getElementById('submit');
+  const spinner = document.getElementById('spinner');
+  const result = document.getElementById('result');
+
+  btn.disabled = true;
+  result.classList.remove('active');
+  spinner.classList.add('active');
+
+  try {
+    const r = await fetch('/api/find', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text}),
+    });
+    const data = await r.json();
+    if (!r.ok || data.error) throw new Error(data.error || 'API hatasi');
+
+    // Recommendation banner
+    document.getElementById('rec-type').textContent = data.recommendation?.type || 'yapim';
+    document.getElementById('rec-title').textContent = data.recommendation?.title || '?';
+    document.getElementById('rec-year').textContent = data.recommendation?.year ? `(${data.recommendation.year})` : '';
+    document.getElementById('rec-reason').textContent = data.recommendation?.reason || '';
+
+    // Layer 1: Emotion
+    setText('emo-summary', data.emotion?.summary);
+    setText('emo-energy', data.emotion?.energy_level);
+    setText('emo-valence', data.emotion?.mood_valence);
+    renderBadges('emo-needs', data.emotion?.needs);
+    renderBadges('emo-avoid', data.emotion?.avoid, 'warn');
+
+    // Layer 2: Recommendation
+    setText('rec-summary', `${data.recommendation?.title || '?'} (${data.recommendation?.year || '?'}) — ${data.recommendation?.type || ''}`);
+    setText('rec-plot', data.recommendation?.plot || '—');
+
+    // Layer 3: Genres (fine-tuned)
+    renderBadges('genres', data.genres, 'ok');
+
+    // Layer 4: Detected moods
+    renderBadges('detected-moods', data.detected_moods);
+
+    // Layer 5: Synthesis
+    const needs = data.emotion?.needs || [];
+    const moods = data.detected_moods || [];
+    const overlap = needs.length && moods.length;
+    setText('synthesis',
+      `Filmin tespit edilen mood'lari (${moods.join(', ') || 'belirsiz'}) ile kullanicinin ihtiyaclari ${overlap ? 'ortusuyor' : 'kismen ortusuyor'}.`
+    );
+
+    result.classList.add('active');
+  } catch (e) {
+    showError(e.message);
+  } finally {
+    btn.disabled = false;
+    spinner.classList.remove('active');
+  }
+});
+</script>
+</body>
+</html>

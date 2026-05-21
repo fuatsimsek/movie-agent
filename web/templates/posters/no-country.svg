@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g_nocountry" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#241810"></stop>
+      <stop offset="60%" stop-color="#241810"></stop>
+      <stop offset="100%" stop-color="#000000"></stop>
+    </linearGradient>
+    <radialGradient id="g_nocountry_v" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#d4aa70" stop-opacity="0.32"></stop>
+      <stop offset="60%" stop-color="#241810" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+  <rect width="220" height="330" fill="url(#g_nocountry)"></rect>
+  <rect width="220" height="330" fill="url(#g_nocountry_v)"></rect>
+  <polygon points="110,71.94 162.05200000000002,165.176 57.94799999999999,165.176" fill="#d4aa70" opacity="0.25" stroke="#d4aa70" stroke-width="3"></polygon>
+  <text x="110" y="254.2" text-anchor="middle" fill="#ffffff" font-family="Helvetica, Arial, sans-serif" font-weight="900" font-size="26" letter-spacing="1.6">NO COUNTRY</text>
+  <line x1="80" y1="268.2" x2="140" y2="268.2" stroke="#d4aa70" stroke-width="1.8" opacity="0.95"></line>
+  <text x="110" y="284.2" text-anchor="middle" fill="#d4aa70" font-family="ui-monospace, &#39;JetBrains Mono&#39;, monospace" font-weight="700" font-size="11" letter-spacing="3.5" opacity="1">2007</text>
+  <rect x="3" y="18" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="18" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="40" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="40" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="62" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="62" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="84" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="84" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="106" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="106" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="128" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="128" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="150" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="150" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="172" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="172" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="194" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="194" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="216" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="216" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="238" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="238" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="260" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="260" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="282" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="282" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="3" y="304" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect><rect x="212" y="304" width="5" height="10" rx="1" fill="#000" opacity="0.6"></rect>
+  <rect x="0.5" y="0.5" width="219" height="329" fill="none" stroke="#d4aa70" stroke-width="1" opacity="0.28" rx="2"></rect>
+</svg>

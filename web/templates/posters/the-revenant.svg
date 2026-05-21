@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="330" viewBox="0 0 220 330" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="grad_23" x1="0" y1="0" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c1018;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a0b8d0;stop-opacity:0.2" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="220" height="330" fill="#0c1018"/>
+  <rect width="220" height="330" fill="url(#grad_23)" opacity="0.6"/>
+  
+  <!-- Decorative shapes -->
+  <circle cx="50" cy="50" r="40" fill="#a0b8d0" opacity="0.15"/>
+  <circle cx="170" cy="280" r="50" fill="#a0b8d0" opacity="0.1"/>
+  <rect x="20" y="200" width="180" height="2" fill="#a0b8d0" opacity="0.3"/>
+  
+  <!-- Title -->
+  <text x="110" y="160" font-family="Arial, sans-serif" font-size="18" font-weight="bold" 
+        text-anchor="middle" fill="#a0b8d0" opacity="0.95">
+    <tspan x="110" dy="0">The Revenant</tspan>
+    
+  </text>
+  
+  <!-- Year -->
+  <text x="110" y="295" font-family="monospace" font-size="12" text-anchor="middle" 
+        fill="#a0b8d0" opacity="0.6">2015</text>
+  
+  <!-- Accent line -->
+  <line x1="40" y1="120" x2="180" y2="120" stroke="#a0b8d0" stroke-width="1.5" opacity="0.4"/>
+</svg>

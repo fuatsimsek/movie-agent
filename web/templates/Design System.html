@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movie Agent — Design System</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <style>
+    body { overflow: auto; padding: 0; }
+    .ds-wrap { max-width: 1080px; margin: 0 auto; padding: 64px 32px 96px; }
+    .ds-section { margin-bottom: 64px; }
+    .ds-section-title {
+      font-family: var(--ff-display); font-weight: 700;
+      font-size: var(--fs-24); letter-spacing: -0.02em;
+      color: var(--text-1); margin-bottom: 6px;
+    }
+    .ds-section-sub {
+      font-size: var(--fs-13); color: var(--text-3);
+      font-family: var(--ff-mono); letter-spacing: 0.04em;
+      margin-bottom: 32px;
+    }
+    .ds-grid    { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .ds-row     { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+    .ds-divider { height: 1px; background: var(--bdr-subtle); margin-bottom: 64px; }
+    .ds-label   { font-size: var(--fs-11); font-family: var(--ff-mono); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 14px; }
+    .ds-swatch  { border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--bdr-subtle); }
+    .ds-swatch-color { height: 72px; }
+    .ds-swatch-meta { padding: 10px 12px; background: var(--bg-surface); }
+    .ds-swatch-name { font-size: var(--fs-12); color: var(--text-1); font-weight: 500; margin-bottom: 2px; }
+    .ds-swatch-val  { font-size: var(--fs-11); color: var(--text-3); font-family: var(--ff-mono); }
+    .ds-type-row { display: flex; flex-direction: column; gap: 6px; }
+    .ds-type-row + .ds-type-row { margin-top: 14px; }
+    .ds-token-table { width: 100%; border-collapse: collapse; font-size: var(--fs-13); }
+    .ds-token-table th { text-align: left; font-size: var(--fs-11); color: var(--text-3); font-family: var(--ff-mono); text-transform: uppercase; letter-spacing: 0.08em; padding: 0 14px 10px; font-weight: 500; border-bottom: 1px solid var(--bdr-subtle); }
+    .ds-token-table td { padding: 10px 14px; border-bottom: 1px solid var(--bdr-subtle); color: var(--text-2); vertical-align: middle; }
+    .ds-token-table td:first-child { color: var(--accent-text); font-family: var(--ff-mono); font-size: var(--fs-12); }
+    .ds-token-table td:last-child  { color: var(--text-3); font-family: var(--ff-mono); font-size: var(--fs-11); }
+    .ds-token-table tr:last-child td { border-bottom: none; }
+    .ds-comp-card { background: var(--bg-surface); border: 1px solid var(--bdr-default); border-radius: var(--r-lg); padding: 24px; }
+    .comp-label { font-size: var(--fs-11); color: var(--text-3); font-family: var(--ff-mono); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 16px; }
+    .json-key  { color: #DEAB52; } .json-str  { color: #6BCB9A; }
+    .json-num  { color: #79B8FF; } .json-bool { color: #E4A840; }
+    .json-null { color: var(--text-3); } .json-punc { color: var(--text-2); }
+    @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+    @keyframes dot-bounce { 0%,80%,100%{transform:scale(.55);opacity:.4} 40%{transform:scale(1);opacity:1} }
+    @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(60,184,122,.45)} 70%{box-shadow:0 0 0 5px rgba(60,184,122,0)} 100%{box-shadow:0 0 0 0 rgba(60,184,122,0)} }
+  </style>
+</head>
+<body>
+  <div style="background: rgba(7,7,15,0.95); backdrop-filter: blur(12px); position: sticky; top:0; z-index:100; border-bottom: 1px solid var(--bdr-subtle); padding: 0 32px; height: 54px; display: flex; align-items: center; justify-content: space-between;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="2"/>
+        <line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/>
+        <line x1="2" y1="12" x2="22" y2="12"/>
+        <line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/>
+        <line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/>
+      </svg>
+      <span style="font-family:var(--ff-display);font-weight:700;font-size:var(--fs-15);color:var(--text-1);">Movie Agent</span>
+      <span style="color:var(--bdr-strong);margin:0 4px;">·</span>
+      <span style="font-size:var(--fs-13);color:var(--text-3);font-family:var(--ff-mono);">Design System v1.0</span>
+    </div>
+    <a href="Movie Agent.html" style="font-size:var(--fs-12);color:var(--accent-text);text-decoration:none;font-family:var(--ff-mono);">← Prototype</a>
+  </div>
+
+  <div class="ds-wrap">
+
+    <!-- ─── TITLE ─── -->
+    <div style="margin-bottom:56px;">
+      <div style="font-size:var(--fs-11);color:var(--accent-text);font-family:var(--ff-mono);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:18px;">
+        Aesthetic: "Criterion Dark" — premium offline AI
+      </div>
+      <h1 style="font-family:var(--ff-display);font-weight:800;font-size:var(--fs-48);letter-spacing:-0.035em;color:var(--text-1);line-height:1.06;margin-bottom:14px;">
+        Design System
+      </h1>
+      <p style="font-size:var(--fs-16);color:var(--text-2);max-width:580px;line-height:1.65;">
+        Tokens, bileşenler ve etkileşim desenleri. Tüm tasarım kararları bu referans dosyasında.
+      </p>
+    </div>
+
+    <!-- ─── COLORS ─── -->
+    <div class="ds-section">
+      <div class="ds-section-title">Renkler</div>
+      <div class="ds-section-sub">tokens.css → :root</div>
+
+      <div class="ds-label">Zemin</div>
+      <div class="ds-grid" style="margin-bottom:28px;">
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#07070F;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">bg-base</div><div class="ds-swatch-val">#07070F</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#0C0C1B;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">bg-surface</div><div class="ds-swatch-val">#0C0C1B</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#111127;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">bg-elevated</div><div class="ds-swatch-val">#111127</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#181834;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">bg-overlay</div><div class="ds-swatch-val">#181834</div></div></div>
+      </div>
+
+      <div class="ds-label">Accent — Amber Gold</div>
+      <div class="ds-grid" style="margin-bottom:28px;">
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#C8871A;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">accent</div><div class="ds-swatch-val">#C8871A · 5.6:1</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#E4A840;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">accent-lt</div><div class="ds-swatch-val">#E4A840</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#DEAB52;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">accent-text</div><div class="ds-swatch-val">#DEAB52 · AA ✓</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:rgba(200,135,26,0.10);"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">accent-mute</div><div class="ds-swatch-val">rgba(200,135,26,0.10)</div></div></div>
+      </div>
+
+      <div class="ds-label">Metin</div>
+      <div class="ds-grid" style="margin-bottom:28px;">
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#EDE9E0;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">text-1</div><div class="ds-swatch-val">#EDE9E0 · 15:1 AAA</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#9290A0;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">text-2</div><div class="ds-swatch-val">#9290A0 · 5.8:1 AA</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#6A6878;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">text-3</div><div class="ds-swatch-val">#6A6878 · decorative</div></div></div>
+      </div>
+
+      <div class="ds-label">Semantic</div>
+      <div class="ds-grid" style="margin-bottom:28px;">
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#3CB87A;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">success</div><div class="ds-swatch-val">#3CB87A</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#E05252;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">error</div><div class="ds-swatch-val">#E05252</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#E89A30;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">warn</div><div class="ds-swatch-val">#E89A30</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#5080DC;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">info</div><div class="ds-swatch-val">#5080DC</div></div></div>
+      </div>
+
+      <div class="ds-label">Mood Palette</div>
+      <div class="ds-grid">
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#FDB940;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">mood-fun</div><div class="ds-swatch-val">Eğlenceli</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#E05252;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">mood-adrenaline</div><div class="ds-swatch-val">Adrenalin</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#5080DC;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">mood-emotional</div><div class="ds-swatch-val">Duygusal</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#3CB87A;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">mood-comfort</div><div class="ds-swatch-val">Rahatlatıcı</div></div></div>
+        <div class="ds-swatch"><div class="ds-swatch-color" style="background:#9060E0;"></div><div class="ds-swatch-meta"><div class="ds-swatch-name">mood-thought</div><div class="ds-swatch-val">Derin/Felsefi</div></div></div>
+      </div>
+    </div>
+
+    <div class="ds-divider"></div>
+
+    <!-- ─── TYPOGRAPHY ─── -->
+    <div class="ds-section">
+      <div class="ds-section-title">Tipografi</div>
+      <div class="ds-section-sub">Syne (display) · Space Grotesk (body) · JetBrains Mono (code)</div>
+
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:32px;">
+        <div style="font-family:var(--ff-display);font-weight:800;font-size:var(--fs-48);letter-spacing:-0.035em;color:var(--text-1);line-height:1.05;">Display / 48 · 800</div>
+        <div style="font-family:var(--ff-display);font-weight:700;font-size:var(--fs-32);letter-spacing:-0.03em;color:var(--text-1);line-height:1.1;">Heading / 32 · 700</div>
+        <div style="font-family:var(--ff-display);font-weight:600;font-size:var(--fs-24);letter-spacing:-0.02em;color:var(--text-1);">Subheading / 24 · 600</div>
+        <div style="font-family:var(--ff-display);font-weight:600;font-size:var(--fs-18);color:var(--text-1);">Section / 18 · 600</div>
+        <div style="font-size:var(--fs-16);color:var(--text-1);margin-top:8px;">Body Large / 16 · 400 — Film özetini yapıştırın, model analiz edecek.</div>
+        <div style="font-size:var(--fs-15);color:var(--text-2);">Body / 15 · 400 — Ruh halinizi ve tercihlerinizi yazın, size özel öneri alın.</div>
+        <div style="font-size:var(--fs-13);color:var(--text-2);">Body Small / 13 · 400 — Fine-tuned Llama 3.1 8B · MPST 71-tag · Ollama offline</div>
+        <div style="font-size:var(--fs-11);color:var(--text-3);font-family:var(--ff-mono);letter-spacing:0.09em;text-transform:uppercase;margin-top:4px;">LABEL / 11 · MONO · UPPERCASE — JSON ÇIKTI</div>
+        <div style="font-size:var(--fs-13);color:var(--accent-text);font-family:var(--ff-mono);margin-top:4px;">{"genres": ["mystery", "neo noir", "suspenseful"]} — Mono / 13</div>
+      </div>
+    </div>
+
+    <div class="ds-divider"></div>
+
+    <!-- ─── SPACING + RADIUS ─── -->
+    <div class="ds-section">
+      <div class="ds-section-title">Spacing & Radius</div>
+      <div class="ds-section-sub">4px grid — --sp-1 → --sp-24</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:32px;align-items:flex-end;">
+        {[1,2,3,4,5,6,8,10,12,16].map(n => ``)}
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:4px;background:var(--accent);border-radius:2px;height:4px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-1</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:8px;background:var(--accent);border-radius:2px;height:8px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-2</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:12px;background:var(--accent);border-radius:2px;height:12px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-3</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:16px;background:var(--accent);border-radius:2px;height:16px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-4</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:20px;background:var(--accent);border-radius:2px;height:20px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-5</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:24px;background:var(--accent);border-radius:2px;height:24px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-6</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:32px;background:var(--accent);border-radius:2px;height:32px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-8</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:40px;background:var(--accent);border-radius:2px;height:40px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-10</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:48px;background:var(--accent);border-radius:2px;height:48px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-12</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="width:64px;background:var(--accent);border-radius:2px;height:64px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);">sp-16</div></div>
+        </div>
+      </div>
+
+      <div class="ds-label">Border Radius</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;">
+        <div style="text-align:center;"><div style="width:40px;height:40px;background:var(--bg-elevated);border:1px solid var(--bdr-default);border-radius:3px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);margin-top:6px;">xs·3</div></div>
+        <div style="text-align:center;"><div style="width:40px;height:40px;background:var(--bg-elevated);border:1px solid var(--bdr-default);border-radius:6px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);margin-top:6px;">sm·6</div></div>
+        <div style="text-align:center;"><div style="width:40px;height:40px;background:var(--bg-elevated);border:1px solid var(--bdr-default);border-radius:10px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);margin-top:6px;">md·10</div></div>
+        <div style="text-align:center;"><div style="width:40px;height:40px;background:var(--bg-elevated);border:1px solid var(--bdr-default);border-radius:16px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);margin-top:6px;">lg·16</div></div>
+        <div style="text-align:center;"><div style="width:40px;height:40px;background:var(--bg-elevated);border:1px solid var(--bdr-default);border-radius:24px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);margin-top:6px;">xl·24</div></div>
+        <div style="text-align:center;"><div style="width:40px;height:40px;background:var(--bg-elevated);border:1px solid var(--bdr-default);border-radius:32px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);margin-top:6px;">2xl·32</div></div>
+        <div style="text-align:center;"><div style="width:40px;height:40px;background:var(--bg-elevated);border:1px solid var(--bdr-default);border-radius:9999px;"></div><div style="font-size:10px;font-family:var(--ff-mono);color:var(--text-3);margin-top:6px;">full</div></div>
+      </div>
+    </div>
+
+    <div class="ds-divider"></div>
+
+    <!-- ─── MOTION ─── -->
+    <div class="ds-section">
+      <div class="ds-section-title">Motion</div>
+      <div class="ds-section-sub">Süreler ve easing fonksiyonları</div>
+      <table class="ds-token-table" style="margin-bottom:28px;">
+        <thead><tr><th>Token</th><th>Değer</th><th>Kullanım</th></tr></thead>
+        <tbody>
+          <tr><td>--d-fast</td><td>120ms</td><td>hover, press, toggle</td></tr>
+          <tr><td>--d-base</td><td>200ms</td><td>border, color, opacity geçişleri</td></tr>
+          <tr><td>--d-slow</td><td>350ms</td><td>panel, chip, modal içerik</td></tr>
+          <tr><td>--d-slower</td><td>560ms</td><td>sayfa geçişi, hero animasyonu</td></tr>
+          <tr><td>--ease-out</td><td>cubic-bezier(0,0,0.2,1)</td><td>çoğu çıkış animasyonu</td></tr>
+          <tr><td>--ease-spring</td><td>cubic-bezier(0.34,1.56,0.64,1)</td><td>chip, badge, modal giriş</td></tr>
+          <tr><td>--ease-inout</td><td>cubic-bezier(0.4,0,0.2,1)</td><td>progress, geçiş animasyonları</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ds-divider"></div>
+
+    <!-- ─── COMPONENTS ─── -->
+    <div class="ds-section">
+      <div class="ds-section-title">Bileşenler</div>
+      <div class="ds-section-sub">components.jsx — tümü window'a export edilir</div>
+
+      <!-- Buttons -->
+      <div class="ds-label">Button · Varyantlar</div>
+      <div class="ds-comp-card" style="margin-bottom:20px;" id="btn-showcase"></div>
+
+      <!-- Chips -->
+      <div class="ds-label">GenreChip · Tür etiketleri</div>
+      <div class="ds-comp-card" style="margin-bottom:20px;" id="chip-showcase"></div>
+
+      <!-- MoodChip -->
+      <div class="ds-label">MoodChip · Seçici</div>
+      <div class="ds-comp-card" style="margin-bottom:20px;" id="mood-chip-showcase"></div>
+
+      <!-- MoodBadge -->
+      <div class="ds-label">MoodBadge · Sonuç rozetleri</div>
+      <div class="ds-comp-card" style="margin-bottom:20px;" id="mood-badge-showcase"></div>
+
+      <!-- MatchBadge -->
+      <div class="ds-label">MatchBadge · Eşleşme sonucu</div>
+      <div class="ds-comp-card" style="margin-bottom:20px;" id="match-showcase"></div>
+
+      <!-- Offline badge -->
+      <div class="ds-label">OfflineBadge · Güven etiketi</div>
+      <div class="ds-comp-card" style="margin-bottom:20px;" id="offline-showcase"></div>
+
+      <!-- Skeleton -->
+      <div class="ds-label">SkeletonBlock · Loading placeholder</div>
+      <div class="ds-comp-card" style="margin-bottom:20px;" id="skel-showcase"></div>
+
+      <!-- Empty State -->
+      <div class="ds-label">EmptyState</div>
+      <div class="ds-comp-card" style="height:220px;display:flex;margin-bottom:20px;" id="empty-showcase"></div>
+
+      <!-- JSON Viewer -->
+      <div class="ds-label">JsonViewer · Syntax highlight</div>
+      <div class="ds-comp-card" style="margin-bottom:20px;" id="json-showcase"></div>
+    </div>
+
+    <div class="ds-divider"></div>
+
+    <!-- ─── TOKEN REFERENCE ─── -->
+    <div class="ds-section">
+      <div class="ds-section-title">Token Referansı</div>
+      <div class="ds-section-sub">Tam CSS custom property listesi</div>
+      <table class="ds-token-table">
+        <thead><tr><th>Token</th><th>Açıklama</th><th>Değer</th></tr></thead>
+        <tbody>
+          <tr><td>--bg-base</td><td>En derin zemin — sayfa arkaplanı</td><td>#07070F</td></tr>
+          <tr><td>--bg-surface</td><td>Kartlar, paneller</td><td>#0C0C1B</td></tr>
+          <tr><td>--bg-elevated</td><td>Tooltip, hover state, kod blokları</td><td>#111127</td></tr>
+          <tr><td>--bg-overlay</td><td>Progress track, overlay zemin</td><td>#181834</td></tr>
+          <tr><td>--bdr-subtle</td><td>Ayırıcı çizgiler, sessiz kenarlıklar</td><td>rgba(255,255,255,0.05)</td></tr>
+          <tr><td>--bdr-default</td><td>Kart kenarlıkları, input default</td><td>rgba(255,255,255,0.09)</td></tr>
+          <tr><td>--bdr-strong</td><td>Scrollbar, vurgulu kenarlık</td><td>rgba(255,255,255,0.16)</td></tr>
+          <tr><td>--bdr-focus</td><td>Input focus ring</td><td>rgba(200,135,26,0.65)</td></tr>
+          <tr><td>--accent</td><td>CTA, vurgu — Amber Gold</td><td>#C8871A</td></tr>
+          <tr><td>--accent-lt</td><td>Hover accent</td><td>#E4A840</td></tr>
+          <tr><td>--accent-text</td><td>Okunabilir accent metin</td><td>#DEAB52</td></tr>
+          <tr><td>--accent-mute</td><td>Chip arka planı</td><td>rgba(200,135,26,0.10)</td></tr>
+          <tr><td>--text-1</td><td>Ana metin · AAA</td><td>#EDE9E0</td></tr>
+          <tr><td>--text-2</td><td>İkincil metin · AA</td><td>#9290A0</td></tr>
+          <tr><td>--text-3</td><td>Dekoratif / placeholder</td><td>#6A6878</td></tr>
+          <tr><td>--ff-display</td><td>Başlıklar, logo</td><td>Syne</td></tr>
+          <tr><td>--ff-body</td><td>Gövde metni, UI</td><td>Space Grotesk</td></tr>
+          <tr><td>--ff-mono</td><td>Kod, JSON, etiketler</td><td>JetBrains Mono</td></tr>
+          <tr><td>--r-md</td><td>Standart köşe — input, button</td><td>10px</td></tr>
+          <tr><td>--r-xl</td><td>Kartlar, modal</td><td>24px</td></tr>
+          <tr><td>--sh-md</td><td>Kart gölgesi</td><td>0 6px 24px rgba(0,0,0,.55)</td></tr>
+          <tr><td>--sh-acc</td><td>CTA button hover gölgesi</td><td>0 4px 24px rgba(200,135,26,.22)</td></tr>
+          <tr><td>--ease-spring</td><td>Chip, badge, modal entrance</td><td>cubic-bezier(0.34,1.56,0.64,1)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── DEV NOTES ─── -->
+    <div class="ds-section">
+      <div class="ds-section-title">Dev Notes</div>
+      <div class="ds-section-sub">Dosya yapısı ve entegrasyon rehberi</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+        <div class="ds-comp-card">
+          <div class="comp-label">Dosya Yapısı</div>
+          <pre style="font-family:var(--ff-mono);font-size:var(--fs-12);color:var(--text-2);line-height:1.8;margin:0;">tokens.css          ← CSS custom props
+components.jsx      ← Shared UI
+home.jsx            ← HomeScreen
+analyzer.jsx        ← AnalyzerScreen
+result-modal.jsx    ← ResultModal
+tweaks-panel.jsx    ← Tweaks shell
+tweaks-config.jsx   ← App tweaks
+app.jsx             ← Root + mount
+Movie Agent.html    ← Entry point</pre>
+        </div>
+        <div class="ds-comp-card">
+          <div class="comp-label">Backend API</div>
+          <pre style="font-family:var(--ff-mono);font-size:var(--fs-12);color:var(--text-2);line-height:1.8;margin:0;">POST /api/recommend
+Body: {
+  mood: string,        ← max 500 char
+  preferences: string  ← max 500 char
+}
+Response: {
+  title, year, type,
+  reason, mood_category
+}</pre>
+        </div>
+        <div class="ds-comp-card">
+          <div class="comp-label">Bileşen Varyantları</div>
+          <pre style="font-family:var(--ff-mono);font-size:var(--fs-12);color:var(--text-2);line-height:1.8;margin:0;">Button:
+  variant: primary | secondary
+           ghost | destructive
+  size: sm | md | lg | xl
+  props: disabled, loading,
+         fullWidth
+
+GenreChip:
+  props: label, index (stagger)
+
+MoodChip:
+  props: mood, selected, onClick
+
+MatchBadge:
+  props: match (bool), visible</pre>
+        </div>
+        <div class="ds-comp-card">
+          <div class="comp-label">Animasyon Deseni</div>
+          <pre style="font-family:var(--ff-mono);font-size:var(--fs-12);color:var(--text-2);line-height:1.8;margin:0;">Chip giriş:
+  delay: 60 + index * 100ms
+  from: scale(0.8) + translateY(5px)
+  ease: --ease-spring · 350ms
+
+Modal giriş:
+  from: translateY(20px) scale(.97)
+  ease: --ease-spring · 350ms
+
+MatchBadge:
+  from: scale(0.86) + translateY(10px)
+  ease: --ease-spring · 350ms</pre>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.ds-wrap -->
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="components.jsx"></script>
+
+  <script type="text/babel">
+    // Mount component showcases
+    function BtnShowcase() {
+      return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+          <Button variant="primary" size="sm">Primary sm</Button>
+          <Button variant="primary" size="md">Primary md</Button>
+          <Button variant="primary" size="lg">Primary lg</Button>
+          <Button variant="primary" size="xl">Primary xl</Button>
+          <Button variant="secondary" size="md">Secondary</Button>
+          <Button variant="ghost" size="md">Ghost</Button>
+          <Button variant="destructive" size="md">Destructive</Button>
+          <Button variant="primary" size="md" disabled>Disabled</Button>
+          <Button variant="primary" size="md" loading>Loading</Button>
+        </div>
+      );
+    }
+    function ChipShowcase() {
+      return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {['mystery','neo noir','suspenseful','drama','action','comedy','sci-fi','horror'].map((g, i) => (
+            <GenreChip key={g} label={g} index={i} />
+          ))}
+        </div>
+      );
+    }
+    function MoodChipShowcase() {
+      const [sel, setSel] = React.useState('comfort');
+      return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {Object.keys(MOOD_META).map(m => (
+            <MoodChip key={m} mood={m} selected={sel === m} onClick={() => setSel(m === sel ? null : m)} />
+          ))}
+        </div>
+      );
+    }
+    function MoodBadgeShowcase() {
+      return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+          {Object.keys(MOOD_META).map(m => <MoodBadge key={m} mood={m} />)}
+        </div>
+      );
+    }
+    function SkelShowcase() {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <SkeletonBlock height="14px" width="40%" />
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <SkeletonBlock width="90px" height="26px" style={{ borderRadius: 'var(--r-full)' }} />
+            <SkeletonBlock width="110px" height="26px" style={{ borderRadius: 'var(--r-full)' }} />
+            <SkeletonBlock width="80px" height="26px" style={{ borderRadius: 'var(--r-full)' }} />
+          </div>
+          <SkeletonBlock height="120px" style={{ borderRadius: 'var(--r-md)' }} />
+        </div>
+      );
+    }
+    function JsonShowcase() {
+      return <JsonViewer data={{ genres: ['mystery', 'neo noir', 'suspenseful'], model: 'movie-agent', confidence: 'high' }} visible={true} />;
+    }
+    function MatchShowcase() {
+      const [m, setM] = React.useState(true);
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <MatchBadge match={true} visible={true} />
+          <MatchBadge match={false} visible={true} />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('btn-showcase')).render(<BtnShowcase />);
+    ReactDOM.createRoot(document.getElementById('chip-showcase')).render(<ChipShowcase />);
+    ReactDOM.createRoot(document.getElementById('mood-chip-showcase')).render(<MoodChipShowcase />);
+    ReactDOM.createRoot(document.getElementById('mood-badge-showcase')).render(<MoodBadgeShowcase />);
+    ReactDOM.createRoot(document.getElementById('match-showcase')).render(<MatchShowcase />);
+    ReactDOM.createRoot(document.getElementById('offline-showcase')).render(<OfflineBadge />);
+    ReactDOM.createRoot(document.getElementById('skel-showcase')).render(<SkelShowcase />);
+    ReactDOM.createRoot(document.getElementById('empty-showcase')).render(<EmptyState title="Analiz bekleniyor" subtitle="Sol panelden giriş yapın ve analiz başlatın." />);
+    ReactDOM.createRoot(document.getElementById('json-showcase')).render(<JsonShowcase />);
+  </script>
+</body>
+</html>
